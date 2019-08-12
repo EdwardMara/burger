@@ -1,0 +1,33 @@
+<h1>Burger Time</h1>
+<img src="/assets/images/burger.png" alt="burger">
+<div class="row">
+    <div id="uneaten" class="col-md-6">
+        <h2 class="header">Eata Burger!</h2>
+        <hr>
+        {{#each burgers}}
+            {{#unless devoured}}
+               <p><span class="number">{{this.id}}. </span>{{this.burger_name}} <button data-id="{{this.id}}" class="devour btn-xs btn-primary"> Devour! </button></p>
+            {{/unless}}
+        {{/each}}
+    </div>
+
+    <div id="eaten" class="col-md-6">
+        <h2 class="header">86 these Burgers!</h2>
+        <hr>
+        {{#each burgers}}
+            {{#if devoured}}
+                <p>{{this.id}}. {{this.burger_name}} </p>
+            {{/if}}
+        {{/each}}
+    </div>
+</div>
+
+<div id="burgerInput">
+    <form class="create-form">
+        <div class="form-group">
+            <textarea id="burgerText" name="burger" rows="8" cols="40"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Add Burger</button>
+        <p>Order a burger and click Add Burger</p>
+    </form>
+</div>

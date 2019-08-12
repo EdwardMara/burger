@@ -1,27 +1,26 @@
-var connection = require("./connection");
+var connection = require('./connection.js');
 
-//use selectAll(), insertOne(), and updateOne()
 var orm = {
-    selectAll: function(cb){
-        connection.query ('SELECT * FROM burgers', function(err, res){
-            if (err) throw err;
-            cb(result);
-
-        });
-    },
-
-    insertOne: function(burger_name, cb){
-        connection.query('INSERT INTO burgers SET ?',{burger_name: burger_name, devoured: false},
-        function(err,result){
-            if(err) throw err;
+    selectAll: function(tableInput, cb) {
+        var queryString = "SELECT * FROM " + tableInput + ";";
+        connection.query(queryString, function(error, result) {
+            if(error) throw error;
             cb(result);
         });
     },
-    
-    updateOne: function(burgerID, callback){
-        connection.query('UPDATE burgers SET ? WHERE ?', [{devoured: true}, {id:burgerID}],
-        function(err,result){
-            if (err) throw err;
+    insertOne: function(table, column, values, cb) {
+        var queryString = "INSERT INTO " + table + "(" + column[0] + ") " + "VALUES (?)";
+        console.log(queryString);
+
+        connection.query(queryString, values, function(error, result) {
+            if(error) throw error;
+            cb(result);
+        });
+    },
+    updateOne: function(table, condition, cb) {
+        var queryString = "UPDATE " + table + " SET devoured = true WHERE " + condition;
+        connection.query(queryString, function(error, result){
+            if(error) throw error;
             cb(result);
         });
     }

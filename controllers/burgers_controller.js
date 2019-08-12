@@ -3,38 +3,37 @@ var express = require("express");
 var router = express.Router();
 
 // Import the model (cat.js) to use its database functions.
-var burger = require("../models/burger");
+var burger = require("../models/burger.js");
 
 // Create all our routes and set up logic within those routes where required.
-router.get('/', function(req, res){
-    res.redirect('/index');
-});
-
-router.get('/index', function (req, res){
-    burger.selectAll(function(data){
-        var burgerObject = {
+router.get("/", function(req, res) {
+    burger.selectAll(function(data) {
+        var handlebarObject = {
             burgers:data
         };
-        res.render('index', burgerObject);
+        console.log(handlebarObject);
+        res.render("index", handlebarObject);
+        //res.json(data);
+    })
+});
+
+router.post("/api/burgers", function(req, res) {
+    burger.insertOne(["burger_name"],[req.body.burgerName], function(result){
+        res.json({id: result.insertId});
     });
 });
 
-router.post('/burger/create', function(req, res){
-    burger.insertOne(req.body.burger_name, function(){
-        res.redirect('/index');
+router.put("/api/burgers/:id", function(req, res) {
+    var condition = "id = " + req.params.id;
+
+    burger.updateOne(condition, function(result) {
+        if(result.changedRows === 0) {
+            return res.status(404).end();
+        }
+
+        res.status(200).end();
     });
 });
 
-router.post('/burger/eat/:id', function(req,res){
-    burger.updateOne(req.params.id, function(){
-        res.redirect('/index');
-
-    });
-});
-
-
-
-
-
-
-module.exports = burger;
+// Export routes for server.js to use.
+module.exports = router;
